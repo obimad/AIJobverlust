@@ -11,13 +11,17 @@ wheels/
 
 # Secrets
 .env
+OpenrouterAPIKey.txt
 
-# Parsed markdown (reproducible via process.py)
+# Parsed markdown (reproducible)
 pages/
 
-# Embeddings (unused in final visualization)
+# Embeddings (unused)
 embed.py
 embeddings.json
+
+# IDE
+.idea/
 
 # macOS
 .DS_Store

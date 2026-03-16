@@ -1,7 +1,7 @@
 """
-Build a compact JSON for the website by merging CSV stats with AI exposure scores.
+Build a compact JSON for the website by merging berufe.csv with AI exposure scores.
 
-Reads occupations.csv (for stats) and scores.json (for AI exposure).
+Reads berufe.csv (for stats) and scores.json (for AI exposure).
 Writes site/data.json.
 
 Usage:
@@ -14,12 +14,16 @@ import json
 
 def main():
     # Load AI exposure scores
-    with open("scores.json") as f:
-        scores_list = json.load(f)
-    scores = {s["slug"]: s for s in scores_list}
+    scores = {}
+    try:
+        with open("scores.json", encoding="utf-8") as f:
+            scores_list = json.load(f)
+        scores = {s["slug"]: s for s in scores_list}
+    except FileNotFoundError:
+        print("Warnung: scores.json nicht gefunden. KI-Exposition wird leer sein.")
 
     # Load CSV stats
-    with open("occupations.csv") as f:
+    with open("berufe.csv", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
 
@@ -32,11 +36,11 @@ def main():
             "title": row["title"],
             "slug": slug,
             "category": row["category"],
-            "pay": int(row["median_pay_annual"]) if row["median_pay_annual"] else None,
-            "jobs": int(row["num_jobs_2024"]) if row["num_jobs_2024"] else None,
-            "outlook": int(row["outlook_pct"]) if row["outlook_pct"] else None,
-            "outlook_desc": row["outlook_desc"],
-            "education": row["entry_education"],
+            "pay": int(row["pay"]) if row["pay"] else None,
+            "jobs": int(row["jobs"]) if row["jobs"] else None,
+            "outlook": int(row["outlook"]) if row["outlook"] else None,
+            "outlook_desc": row["outlook_desc"] if row["outlook_desc"] else None,
+            "education": row["education"],
             "exposure": score.get("exposure"),
             "exposure_rationale": score.get("rationale"),
             "url": row.get("url", ""),
@@ -44,12 +48,12 @@ def main():
 
     import os
     os.makedirs("site", exist_ok=True)
-    with open("site/data.json", "w") as f:
-        json.dump(data, f)
+    with open("site/data.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
 
-    print(f"Wrote {len(data)} occupations to site/data.json")
+    print(f"{len(data)} Berufe nach site/data.json geschrieben")
     total_jobs = sum(d["jobs"] for d in data if d["jobs"])
-    print(f"Total jobs represented: {total_jobs:,}")
+    print(f"Gesamtbeschaeftigte: {total_jobs:,}")
 
 
 if __name__ == "__main__":
