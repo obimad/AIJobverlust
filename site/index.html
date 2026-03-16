@@ -233,10 +233,10 @@ canvas#canvas {
     <h1>Deutscher Arbeitsmarkt &ndash; KI-Exposition <a href="https://github.com/obimad/AIJobverlust">GitHub</a></h1>
     <p style="font-size:13px;color:var(--fg2);margin-bottom:10px;">Inspiriert von <a href="https://karpathy.ai/jobs/">karpathy.ai/jobs</a> von Andrej Karpathy (US-Arbeitsmarkt). Deutsche Adaption: <a href="https://www.linkedin.com/in/digital-audit/">Digital-Audit Stefan Werner</a> 2026.</p>
     <p>Diese Treemap zeigt <b id="introCount">~130 Berufsgruppen</b> des deutschen Arbeitsmarkts aus der <a href="https://statistik.arbeitsagentur.de/">Beschaeftigtenstatistik der Bundesagentur fuer Arbeit</a> (KldB 2010, 3-Steller).</p>
-    <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (gruen = gut bezahlt, rot = niedrig), <em>Anforderungsniveau</em> (gruen = Experte, rot = Helfer) oder <em>KI-Exposition</em> (gruen = kaum betroffen, rot = stark betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
-    <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) leuchten rot &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine gruene Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
-    <p><b>Anforderungsniveau:</b> Faerbt nach Helfer (rot) bis Experte (gruen). Der Grossteil des Arbeitsmarkts besteht aus Fachkraeften &mdash; Experten-Berufe (Aerzte, Wissenschaftler, Piloten) sind eine kleine, gut bezahlte Minderheit.</p>
-    <p><b>KI-Exposition:</b> Das Bild kehrt sich um &mdash; jetzt leuchten die gut bezahlten Buero- und Wissensberufe (IT, Beratung, Verwaltung, Finanzen) rot, waehrend Handwerk und Pflege gruen bleiben. Rot bedeutet dabei nicht &bdquo;Job faellt weg&ldquo;, sondern &bdquo;KI veraendert diese Arbeit stark&ldquo;. Ein Softwareentwickler (9/10) wird weiterhin gebraucht &mdash; aber KI veraendert <em>wie</em> gearbeitet wird, und moeglicherweise <em>wie viele</em> gebraucht werden.</p>
+    <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (dunkelblau = gut bezahlt, hellblau = niedrig), <em>Anforderungsniveau</em> (dunkelviolett = Experte, hellviolett = Helfer) oder <em>KI-Exposition</em> (gedaempft = kaum betroffen, orange = stark betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
+    <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) leuchten hellblau &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine dunkelblaue Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
+    <p><b>Anforderungsniveau:</b> Faerbt nach Helfer (hellviolett) bis Experte (dunkelviolett). Der Grossteil des Arbeitsmarkts besteht aus Fachkraeften &mdash; Experten-Berufe (Aerzte, Wissenschaftler, Piloten) sind eine kleine, gut bezahlte Minderheit.</p>
+    <p><b>KI-Exposition:</b> Das Bild kehrt sich um &mdash; jetzt leuchten die gut bezahlten Buero- und Wissensberufe (IT, Beratung, Verwaltung, Finanzen) orange, waehrend Handwerk und Pflege gedaempft bleiben. Orange bedeutet dabei nicht &bdquo;Job faellt weg&ldquo;, sondern &bdquo;KI veraendert diese Arbeit stark&ldquo;. Ein Softwareentwickler (9/10) wird weiterhin gebraucht &mdash; aber KI veraendert <em>wie</em> gearbeitet wird, und moeglicherweise <em>wie viele</em> gebraucht werden.</p>
     <details>
       <summary>Methodik: KI-Expositions-Scoring per LLM</summary>
       <div class="prompt-box">Die KI-Exposition (0&ndash;10) wird per Large Language Model (LLM) geschaetzt. Jede Berufsgruppe wird einzeln bewertet nach: Wie stark wird KI diesen Beruf umgestalten? Direkte Effekte (Automatisierung) und indirekte Effekte (Produktivitaetssteigerung, weniger Stellen noetig) fliessen ein.
@@ -311,19 +311,58 @@ function boostContrast(t) {
   return b / 2 + 0.5;
 }
 
-function greenRedCSS(t, alpha) {
+// Colorblind-safe color scales (no red-green contrast)
+
+// Blue scale: t=0 → deep vivid blue, t=1 → pale steel blue
+function blueScaleCSS(t, alpha) {
   t = boostContrast(Math.max(0, Math.min(1, t)));
   let r, g, b;
   if (t < 0.5) {
     const s = t / 0.5;
-    r = Math.round(30 + s * 200);
-    g = Math.round(180 - s * 20);
-    b = Math.round(40 - s * 20);
+    r = Math.round(30 + s * 65);
+    g = Math.round(90 + s * 75);
+    b = Math.round(210 + s * 20);
   } else {
     const s = (t - 0.5) / 0.5;
-    r = Math.round(230 + s * 25);
-    g = Math.round(160 - s * 130);
-    b = Math.round(20 - s * 5);
+    r = Math.round(95 + s * 90);
+    g = Math.round(165 + s * 50);
+    b = Math.round(230 + s * 15);
+  }
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// Purple/Violet scale: t=0 → deep purple, t=1 → pale lavender
+function purpleScaleCSS(t, alpha) {
+  t = boostContrast(Math.max(0, Math.min(1, t)));
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t / 0.5;
+    r = Math.round(105 + s * 40);
+    g = Math.round(50 + s * 55);
+    b = Math.round(200 + s * 20);
+  } else {
+    const s = (t - 0.5) / 0.5;
+    r = Math.round(145 + s * 50);
+    g = Math.round(105 + s * 60);
+    b = Math.round(220 + s * 20);
+  }
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// Orange/Amber scale: t=0 → cool blue-gray (safe), t=1 → bright orange (danger)
+function orangeScaleCSS(t, alpha) {
+  t = boostContrast(Math.max(0, Math.min(1, t)));
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t / 0.5;
+    r = Math.round(80 + s * 125);
+    g = Math.round(160 + s * 30);
+    b = Math.round(180 - s * 80);
+  } else {
+    const s = (t - 0.5) / 0.5;
+    r = Math.round(205 + s * 45);
+    g = Math.round(190 - s * 100);
+    b = Math.round(100 - s * 70);
   }
   return `rgba(${r},${g},${b},${alpha})`;
 }
@@ -333,15 +372,15 @@ const EDU_LEVELS = ["Helfer", "Fachkraft", "Spezialist", "Experte"];
 function payColor(v, a) {
   if (v == null) return `rgba(128,128,128,${a})`;
   const t = 1 - (Math.log(Math.max(20000, Math.min(100000, v))) - Math.log(20000)) / (Math.log(100000) - Math.log(20000));
-  return greenRedCSS(t, a);
+  return blueScaleCSS(t, a);
 }
 function eduColor(idx, a) {
   if (idx < 0) return `rgba(128,128,128,${a})`;
-  return greenRedCSS(1 - idx / (EDU_LEVELS.length - 1), a);
+  return purpleScaleCSS(1 - idx / (EDU_LEVELS.length - 1), a);
 }
 function exposureColor(v, a) {
   if (v == null) return `rgba(128,128,128,${a})`;
-  return greenRedCSS(v / 10, a);
+  return orangeScaleCSS(v / 10, a);
 }
 
 function tileColorCSS(d, alpha) {
@@ -774,7 +813,9 @@ function drawGradientLegend() {
   const gctx = c.getContext("2d");
   for (let x = 0; x < 80; x++) {
     const t = x / 79;
-    gctx.fillStyle = colorMode === "exposure" ? greenRedCSS(t, 1) : greenRedCSS(1 - t, 1);
+    if (colorMode === "exposure") gctx.fillStyle = orangeScaleCSS(t, 1);
+    else if (colorMode === "pay") gctx.fillStyle = blueScaleCSS(1 - t, 1);
+    else gctx.fillStyle = purpleScaleCSS(1 - t, 1);
     gctx.fillRect(x, 0, 1, 8);
   }
   const cfg = LEGEND_CONFIG[colorMode];
