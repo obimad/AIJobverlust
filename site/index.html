@@ -233,10 +233,10 @@ canvas#canvas {
     <h1>Deutscher Arbeitsmarkt &ndash; KI-Exposition <a href="https://github.com/obimad/AIJobverlust">GitHub</a></h1>
     <p style="font-size:13px;color:var(--fg2);margin-bottom:10px;">Inspiriert von <a href="https://karpathy.ai/jobs/">karpathy.ai/jobs</a> von Andrej Karpathy (US-Arbeitsmarkt). Deutsche Adaption: <a href="https://www.linkedin.com/in/digital-audit/">Digital-Audit Stefan Werner</a> 2026.</p>
     <p>Diese Treemap zeigt <b id="introCount">~130 Berufsgruppen</b> des deutschen Arbeitsmarkts aus der <a href="https://statistik.arbeitsagentur.de/">Beschaeftigtenstatistik der Bundesagentur fuer Arbeit</a> (KldB 2010, 3-Steller).</p>
-    <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (blau = gut bezahlt, weiss = niedrig), <em>Anforderungsniveau</em> (blau = Experte, weiss = Helfer) oder <em>KI-Exposition</em> (weiss = kaum betroffen, blau = stark betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
-    <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) leuchten weiss &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine blaue Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
-    <p><b>Anforderungsniveau:</b> Faerbt nach Helfer (weiss) bis Experte (blau). Der Grossteil des Arbeitsmarkts besteht aus Fachkraeften &mdash; Experten-Berufe (Aerzte, Wissenschaftler, Piloten) sind eine kleine, gut bezahlte Minderheit.</p>
-    <p><b>KI-Exposition:</b> Das Bild kehrt sich um &mdash; jetzt leuchten die gut bezahlten Buero- und Wissensberufe (IT, Beratung, Verwaltung, Finanzen) blau, waehrend Handwerk und Pflege weiss bleiben. Blau bedeutet dabei nicht &bdquo;Job faellt weg&ldquo;, sondern &bdquo;KI veraendert diese Arbeit stark&ldquo;. Ein Softwareentwickler (9/10) wird weiterhin gebraucht &mdash; aber KI veraendert <em>wie</em> gearbeitet wird, und moeglicherweise <em>wie viele</em> gebraucht werden.</p>
+    <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (weiss = gut bezahlt, dunkel = niedrig), <em>Anforderungsniveau</em> (weiss = Experte, dunkel = Helfer) oder <em>KI-Exposition</em> (dunkel = stark betroffen, weiss = kaum betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
+    <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) sind dunkel &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine helle Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
+    <p><b>Anforderungsniveau:</b> Faerbt nach Helfer (dunkel) bis Experte (weiss/hell). Der Grossteil des Arbeitsmarkts besteht aus Fachkraeften &mdash; Experten-Berufe (Aerzte, Wissenschaftler, Piloten) sind eine kleine, gut bezahlte Minderheit.</p>
+    <p><b>KI-Exposition:</b> Das Bild kehrt sich um &mdash; jetzt sind die gut bezahlten Buero- und Wissensberufe (IT, Beratung, Verwaltung, Finanzen) dunkel, waehrend Handwerk und Pflege hell bleiben. Dunkel bedeutet dabei nicht &bdquo;Job faellt weg&ldquo;, sondern &bdquo;KI veraendert diese Arbeit stark&ldquo;. Ein Softwareentwickler (9/10) wird weiterhin gebraucht &mdash; aber KI veraendert <em>wie</em> gearbeitet wird, und moeglicherweise <em>wie viele</em> gebraucht werden.</p>
     <details>
       <summary>Methodik: KI-Expositions-Scoring per LLM</summary>
       <div class="prompt-box">Die KI-Exposition (0&ndash;10) wird per Large Language Model (LLM) geschaetzt. Jede Berufsgruppe wird einzeln bewertet nach: Wie stark wird KI diesen Beruf umgestalten? Direkte Effekte (Automatisierung) und indirekte Effekte (Produktivitaetssteigerung, weniger Stellen noetig) fliessen ein.
@@ -325,16 +325,16 @@ const EDU_LEVELS = ["Helfer", "Fachkraft", "Spezialist", "Experte"];
 
 function payColor(v, a) {
   if (v == null) return `rgba(128,128,128,${a})`;
-  const t = 1 - (Math.log(Math.max(20000, Math.min(100000, v))) - Math.log(20000)) / (Math.log(100000) - Math.log(20000));
+  const t = (Math.log(Math.max(20000, Math.min(100000, v))) - Math.log(20000)) / (Math.log(100000) - Math.log(20000));
   return blueWhiteCSS(t, a);
 }
 function eduColor(idx, a) {
   if (idx < 0) return `rgba(128,128,128,${a})`;
-  return blueWhiteCSS(1 - idx / (EDU_LEVELS.length - 1), a);
+  return blueWhiteCSS(idx / (EDU_LEVELS.length - 1), a);
 }
 function exposureColor(v, a) {
   if (v == null) return `rgba(128,128,128,${a})`;
-  return blueWhiteCSS(v / 10, a);
+  return blueWhiteCSS(1 - v / 10, a);
 }
 
 function tileColorCSS(d, alpha) {
@@ -767,8 +767,8 @@ function drawGradientLegend() {
   const gctx = c.getContext("2d");
   for (let x = 0; x < 80; x++) {
     const t = x / 79;
-    if (colorMode === "exposure") gctx.fillStyle = blueWhiteCSS(t, 1);
-    else gctx.fillStyle = blueWhiteCSS(1 - t, 1);
+    if (colorMode === "exposure") gctx.fillStyle = blueWhiteCSS(1 - t, 1);
+    else gctx.fillStyle = blueWhiteCSS(t, 1);
     gctx.fillRect(x, 0, 1, 8);
   }
   const cfg = LEGEND_CONFIG[colorMode];
