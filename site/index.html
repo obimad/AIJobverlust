@@ -191,6 +191,16 @@ canvas#canvas {
   cursor: default;
 }
 
+.attribution {
+  font-size: 12px;
+  color: var(--fg2);
+  text-align: center;
+  padding: 16px 28px;
+  line-height: 1.5;
+}
+.attribution a { color: var(--fg2); text-decoration: underline; }
+.attribution a:hover { color: var(--fg); }
+
 #tooltip {
   position: fixed;
   pointer-events: none;
@@ -221,6 +231,7 @@ canvas#canvas {
 <div id="header">
   <div class="intro">
     <h1>Deutscher Arbeitsmarkt &ndash; KI-Exposition <a href="https://github.com/obimad/AIJobverlust">GitHub</a></h1>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:10px;">Inspiriert von <a href="https://karpathy.ai/jobs/">karpathy.ai/jobs</a> von Andrej Karpathy (US-Arbeitsmarkt). Deutsche Adaption: <a href="https://www.linkedin.com/in/digital-audit/">Digital-Audit Stefan Werner</a> 2026.</p>
     <p>Diese Treemap zeigt <b id="introCount">~130 Berufsgruppen</b> des deutschen Arbeitsmarkts aus der <a href="https://statistik.arbeitsagentur.de/">Beschaeftigtenstatistik der Bundesagentur fuer Arbeit</a> (KldB 2010, 3-Steller).</p>
     <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (gruen = gut bezahlt, rot = niedrig), <em>Anforderungsniveau</em> (gruen = Experte, rot = Helfer) oder <em>KI-Exposition</em> (gruen = kaum betroffen, rot = stark betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
     <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) leuchten rot &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine gruene Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
