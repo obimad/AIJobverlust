@@ -221,25 +221,26 @@ canvas#canvas {
 <div id="header">
   <div class="intro">
     <h1>Deutscher Arbeitsmarkt &ndash; KI-Exposition <a href="https://github.com/obimad/AIJobverlust">GitHub</a></h1>
-    <p>Dieses Tool visualisiert <b id="introCount">~130 Berufsgruppen</b> aus der <a href="https://statistik.arbeitsagentur.de/">Beschaeftigtenstatistik der Bundesagentur fuer Arbeit</a> (KldB 2010, 3-Steller). Jedes Rechteck ist <b>flaechenproportional</b> zur Anzahl sozialversicherungspflichtig Beschaeftigter. Die <b>Farbe</b> zeigt die gewaehlte Metrik &mdash; umschalten zwischen Mediangehalt, Anforderungsniveau und KI-Exposition. Klicke auf eine Kachel, um die BERUFENET-Seite zu oeffnen.</p>
-    <p><b>KI-gestuetzte Einfaerbung:</b> Der <a href="https://github.com/obimad/AIJobverlust">Quellcode</a> enthaelt Scraper, Parser und eine Pipeline, um per LLM jeden Beruf nach beliebigen Kriterien zu bewerten. Der Prompt wird geschrieben, das LLM bewertet jeden Beruf, und die Treemap faerbt sich entsprechend. Die &bdquo;Digitale KI-Exposition&ldquo; ist ein Beispiel &mdash; sie schaetzt, wie stark aktuelle KI (primaer digital) jeden Beruf umgestalten wird.</p>
+    <p>Diese Treemap zeigt <b id="introCount">~130 Berufsgruppen</b> des deutschen Arbeitsmarkts aus der <a href="https://statistik.arbeitsagentur.de/">Beschaeftigtenstatistik der Bundesagentur fuer Arbeit</a> (KldB 2010, 3-Steller).</p>
+    <p><b>So liest man die Karte:</b> Die <b>Groesse</b> jeder Kachel entspricht der Anzahl sozialversicherungspflichtig Beschaeftigter &mdash; je groesser das Rechteck, desto mehr Menschen arbeiten in diesem Beruf. Die <b>Farbe</b> zeigt die oben gewaehlte Metrik: <em>Mediangehalt</em> (gruen = gut bezahlt, rot = niedrig), <em>Anforderungsniveau</em> (gruen = Experte, rot = Helfer) oder <em>KI-Exposition</em> (gruen = kaum betroffen, rot = stark betroffen). Die <b>Statistiken</b> oberhalb der Karte zeigen Gesamtwerte und Aufschluesselungen zur gewaehlten Ebene. <b>Hover</b> ueber eine Kachel fuer Details, <b>Klick</b> oeffnet die BERUFENET-Seite der Bundesagentur.</p>
+    <p><b>Mediangehalt:</b> Die groessten Berufsgruppen (Pflege, Lager, Verkauf, Gastronomie) leuchten rot &mdash; niedrige Gehaelter, aber Millionen Beschaeftigte. Kleine gruene Kacheln (IT, Medizin, Geschaeftsfuehrung) zeigen hohe Gehaelter bei weniger Beschaeftigten.</p>
+    <p><b>Anforderungsniveau:</b> Faerbt nach Helfer (rot) bis Experte (gruen). Der Grossteil des Arbeitsmarkts besteht aus Fachkraeften &mdash; Experten-Berufe (Aerzte, Wissenschaftler, Piloten) sind eine kleine, gut bezahlte Minderheit.</p>
+    <p><b>KI-Exposition:</b> Das Bild kehrt sich um &mdash; jetzt leuchten die gut bezahlten Buero- und Wissensberufe (IT, Beratung, Verwaltung, Finanzen) rot, waehrend Handwerk und Pflege gruen bleiben. Rot bedeutet dabei nicht &bdquo;Job faellt weg&ldquo;, sondern &bdquo;KI veraendert diese Arbeit stark&ldquo;. Ein Softwareentwickler (9/10) wird weiterhin gebraucht &mdash; aber KI veraendert <em>wie</em> gearbeitet wird, und moeglicherweise <em>wie viele</em> gebraucht werden.</p>
     <details>
-      <summary>KI-Expositions-Scoring-Prompt anzeigen (Beispiel)</summary>
-      <div class="prompt-box">Du bist ein Experte fuer Arbeitsmarktanalyse und bewertest, wie stark verschiedene Berufe durch KI veraendert werden.
-
-Bewerte die KI-Exposition des Berufs auf einer Skala von 0 bis 10.
-
-KI-Exposition misst: Wie stark wird KI diesen Beruf umgestalten? Beruecksichtige sowohl direkte Effekte (KI automatisiert Aufgaben) als auch indirekte Effekte (KI macht Arbeitnehmer so produktiv, dass weniger benoetigt werden).
+      <summary>Methodik: KI-Expositions-Scoring per LLM</summary>
+      <div class="prompt-box">Die KI-Exposition (0&ndash;10) wird per Large Language Model (LLM) geschaetzt. Jede Berufsgruppe wird einzeln bewertet nach: Wie stark wird KI diesen Beruf umgestalten? Direkte Effekte (Automatisierung) und indirekte Effekte (Produktivitaetssteigerung, weniger Stellen noetig) fliessen ein.
 
 Ankerpunkte:
-- 0-1: Minimale Exposition. Fast ausschliesslich physisch/handwerklich. Beispiele: Dachdecker, Landschaftsgaertner.
-- 2-3: Niedrige Exposition. Ueberwiegend physisch. Beispiele: Elektriker, Klempner, Feuerwehr.
-- 4-5: Mittlere Exposition. Mix aus Wissens- und physischer Arbeit. Beispiele: Krankenpflege, Polizei.
-- 6-7: Hohe Exposition. Ueberwiegend Wissensarbeit. Beispiele: Lehrer, Manager, Buchhalter.
-- 8-9: Sehr hohe Exposition. Fast ausschliesslich am Computer. Beispiele: Softwareentwickler, Designer, Uebersetzer.
-- 10: Maximale Exposition. Routine-Informationsverarbeitung. Beispiele: Datentypisten, Telefonverkauf.</div>
+- 0-1: Minimale Exposition. Physisch/handwerklich. Bsp: Dachdecker, Landschaftsgaertner.
+- 2-3: Niedrig. Ueberwiegend physisch. Bsp: Elektriker, Klempner, Feuerwehr.
+- 4-5: Mittel. Mix Wissens-/physische Arbeit. Bsp: Krankenpflege, Polizei.
+- 6-7: Hoch. Ueberwiegend Wissensarbeit. Bsp: Lehrer, Manager, Buchhalter.
+- 8-9: Sehr hoch. Fast nur am Computer. Bsp: Softwareentwickler, Designer, Uebersetzer.
+- 10: Maximal. Routine-Informationsverarbeitung. Bsp: Datentypisten, Telefonverkauf.
+
+Der Quellcode (github.com/obimad/AIJobverlust) enthaelt die komplette Pipeline. Der Prompt kann frei angepasst werden &mdash; z.B. fuer Robotik-Exposition, Offshoring-Risiko oder Klimawandel-Auswirkung.</div>
     </details>
-    <p><b>Hinweis zu KI-Expositionswerten:</b> Diese sind grobe LLM-Schaetzungen, keine belastbaren Prognosen. Ein hoher Wert bedeutet nicht, dass der Beruf verschwinden wird. Softwareentwickler erhalten 9/10, weil KI ihre Arbeit transformiert &mdash; die Nachfrage nach Software koennte aber <em>steigen</em>, wenn jeder Entwickler produktiver wird. Der Score beruecksichtigt weder Nachfrageelastizitaet noch regulatorische Barrieren oder gesellschaftliche Praeferenzen fuer menschliche Arbeitskraefte.</p>
+    <p><b>Hinweis:</b> Die KI-Expositionswerte sind LLM-Schaetzungen, keine belastbaren Prognosen. Ein hoher Wert bedeutet nicht, dass der Beruf verschwinden wird &mdash; Softwareentwickler erhalten 9/10, weil KI ihre Arbeit transformiert, aber die Nachfrage nach Software koennte <em>steigen</em>. Der Score beruecksichtigt weder Nachfrageelastizitaet noch regulatorische Barrieren oder gesellschaftliche Praeferenzen.</p>
   </div>
 
   <div class="data-source">
